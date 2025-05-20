@@ -3,11 +3,9 @@ const colorMode = useColorMode();
 
 const isDark = computed({
   get() {
-    return colorMode.value;
+    return colorMode.value === "dark";
   },
   set(value) {
-    console.log(value, colorMode.preference, colorMode.value, colorMode.forced, colorMode.unknown);
-
     colorMode.preference = value ? "dark" : "light";
   },
 });

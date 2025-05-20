@@ -16,6 +16,7 @@ export default withNuxt(
         semi: true,
         quotes: "double",
       },
+      ignores: ["**/migrations/*"],
     },
     {
       rules: {
