@@ -39,6 +39,15 @@ export default withNuxt(
             ignore: ["README.md"],
           },
         ],
+        "vue/html-self-closing": ["error", {
+          html: {
+            void: "always", // e.g. <br> instead of <br />
+            normal: "never", // e.g. <div></div> instead of <div />
+            component: "always", // e.g. <MyComponent />
+          },
+          svg: "always",
+          math: "always",
+        }],
       },
     },
   ),

@@ -7,7 +7,7 @@ const authStore = useAuthStore();
     <summary class="btn m-1 ">
       <div v-if="authStore.user.image" class="avatar">
         <div class="rounded-full w-8">
-          <img :src="authStore.user.image" :alt="authStore.user.name">
+          <img :src="authStore.user.image" :alt="authStore.user.name" />
         </div>
       </div>
       {{ authStore.user.name }}
@@ -23,7 +23,7 @@ const authStore = useAuthStore();
   </details>
   <button v-else :disabled="authStore.loading" class="btn btn-primary" @click="authStore.signIn">
     Sign In with Github
-    <span v-if="authStore.loading" class="loading loading-spinner loading-md" />
+    <span v-if="authStore.loading" class="loading loading-spinner loading-md"></span>
     <Icon v-else name="tabler:brand-github" size="24" />
   </button>
 </template>
