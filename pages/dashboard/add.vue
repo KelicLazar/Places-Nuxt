@@ -50,17 +50,17 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="container max-w-md-mx-auto p-4">
+  <div class="container max-w-md mx-auto p-4">
     <div class="my-4">
       <h1 class="text-lg">
-        Add LOcation
+        Add Location
       </h1>
       <p class="text-sm">
         A location is a place you have traveled or will travel to. It can be a city, country
       </p>
     </div>
     <div v-if="submitError" role="alert" class="alert alert-error">
-      <Icon size="24" name="tabler:error" />
+      <Icon size="24" name="tabler:alert-triangle" />
       <span>{{ submitError }}</span>
     </div>
     <form class="flex flex-col gap-2" @submit.prevent="onSubmit">
