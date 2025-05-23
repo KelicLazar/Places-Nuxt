@@ -14,7 +14,7 @@ const props = defineProps<
       :as="type === 'textarea' ? 'textarea' : 'input' "
       :name="name"
       :type="type || 'text'"
-      class="textarea w-full"
+      class="textarea w-full min-h-12"
       :class="{ 'input-error': props.error, 'input': !type || type !== 'textarea', 'textarea': type === 'textarea' }"
     />
     <div v-if="props.error" class="label text-error">
