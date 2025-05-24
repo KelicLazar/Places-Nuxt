@@ -8,6 +8,7 @@
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never"
   },
+
   "files.associations": {
     "*.css": "tailwindcss"
   },

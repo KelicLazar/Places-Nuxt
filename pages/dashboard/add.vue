@@ -12,7 +12,9 @@ const loading = ref(false);
 const submitted = ref(false);
 
 const { handleSubmit, errors, meta, setErrors } = useForm({
-  validationSchema: toTypedSchema(InsertLocation as any),
+  // eslint-disable-next-line ts/ban-ts-comment
+  // @ts-ignore
+  validationSchema: toTypedSchema(InsertLocation),
 });
 onBeforeRouteLeave(() => {
   if (meta.value.dirty && !submitted.value) {

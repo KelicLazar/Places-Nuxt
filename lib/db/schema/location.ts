@@ -1,5 +1,7 @@
 import { int, real, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
+// eslint-disable-next-line ts/consistent-type-imports
+import { z } from "zod";
 
 import { user } from "./auth";
 
@@ -29,3 +31,6 @@ export const InsertLocation = createInsertSchema(location, {
   createdAt: true,
   updatedAt: true,
 });
+
+// @ts-expect-error nzm
+export type InsertLocationType = z.infer<typeof InsertLocation>;

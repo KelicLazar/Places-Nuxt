@@ -1,14 +1,11 @@
 import type { DrizzleError } from "drizzle-orm";
 
-import { and, eq } from "drizzle-orm";
-import { customAlphabet } from "nanoid";
 import slugify from "slug";
 
-import db from "~/lib/db";
-import { InsertLocation, location } from "~/lib/db/schema";
+import { findLocationByName, findUniqueSlug, insertLocation } from "~/lib/db/queries/location";
+import { InsertLocation } from "~/lib/db/schema";
 
 export default defineEventHandler(async (event) => {
-  const nanoid = customAlphabet("1234567890,qwertyuiopasdfghjklzxcvbnm", 5);
   if (!event.context.user) {
     return sendError(event, createError({
       statusCode: 401,
@@ -17,13 +14,13 @@ export default defineEventHandler(async (event) => {
   }
   const result = await readValidatedBody(event, InsertLocation.safeParse);
   if (!result.success) {
-    const statusMessage = result.error.issues.map((issue) => {
+    const statusMessage = result.error.issues.map((issue: any) => {
       return `${issue.path.join("")}: ${issue.message}`;
     }).join("; ");
 
     const data = result.error.issues.reduce((
-      errors,
-      issue,
+      errors: any,
+      issue: any,
     ) => {
       errors[issue.path.join("")] = issue.message;
       return errors;
@@ -35,13 +32,8 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  const existingLocation = await db.query.location.findFirst({
-    where:
-    and(
-      eq(location.name, result.data.name),
-      eq(location.userId, event.context.user.id),
-    ),
-  });
+  const existingLocation = await findLocationByName(result.data, event.context.user.id);
+
   if (existingLocation) {
     return sendError(event, createError({
       statusCode: 409,
@@ -50,32 +42,10 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  let slug = slugify(result.data.name);
-  let existing = !!(await db.query.location.findFirst({
-    where: eq(location.slug, slug),
-  }));
-  console.log(slug);
-  console.log(existing);
+  const slug = await findUniqueSlug(slugify(result.data.name));
 
-  while (existing) {
-    const id = nanoid();
-    console.log(id);
-    const idSlug = `${slug}-${id}`;
-    console.log(idSlug);
-    existing = !!(await db.query.location.findFirst({
-      where: eq(location.slug, idSlug),
-    }));
-    if (!existing) {
-      slug = idSlug;
-    }
-  }
   try {
-    const [created] = await db.insert(location).values({
-      ...result.data,
-      slug,
-      userId: event.context.user.id,
-    }).returning();
-    return created;
+    return insertLocation(result.data, slug, event.context.user.id);
   }
   catch (e) {
     const error = e as DrizzleError;
