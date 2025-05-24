@@ -5,9 +5,7 @@ import slugify from "slug";
 import { findLocationByName, findUniqueSlug, insertLocation } from "~/lib/db/queries/location";
 import { InsertLocation } from "~/lib/db/schema";
 
-
 export default defineEventHandler(async (event) => {
-  const nanoid = customAlphabet("1234567890,qwertyuiopasdfghjklzxcvbnm", 5);
   if (!event.context.user) {
     return sendError(event, createError({
       statusCode: 401,
@@ -44,12 +42,10 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-
   const slug = await findUniqueSlug(slugify(result.data.name));
 
   try {
     return insertLocation(result.data, slug, event.context.user.id);
-
   }
   catch (e) {
     const error = e as DrizzleError;
