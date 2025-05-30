@@ -10,6 +10,10 @@ const style = computed(() => {
 });
 
 const mapStore = useMapStore();
+
+onMounted(() => {
+  mapStore.init();
+});
 </script>
 
 <template>
