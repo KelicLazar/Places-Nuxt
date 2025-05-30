@@ -8,6 +8,8 @@ const colorMode = useColorMode();
 const style = computed(() => {
   return colorMode.value === "dark" ? "./styles/dark.json" : "https://tiles.openfreemap.org/styles/liberty";
 });
+
+const mapStore = useMapStore();
 </script>
 
 <template>
@@ -17,5 +19,12 @@ const style = computed(() => {
     :zoom="zoom"
   >
     <MglNavigationControl />
+    <MglMarker v-for="point in mapStore.mapPoints" :key="point.id" :coordinates="[point.long, point.lat]">
+      <template #marker>
+        <div class="tooltip tolltip-top" :data-tip="point.label">
+          <Icon name="tabler:map-pin-filled" size="30" class="text-amber-600" />
+        </div>
+      </template>
+    </MglMarker>
   </MglMap>
 </template>
