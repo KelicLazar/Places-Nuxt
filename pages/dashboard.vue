@@ -4,8 +4,10 @@ import { Icon } from "#components";
 const isSidebarOpen = ref(true);
 const route = useRoute();
 const locationsStore = useLocationStore();
+const mapStore = useMapStore();
 onMounted(() => {
   isSidebarOpen.value = localStorage.getItem("isSidebarOpen") === "true";
+  mapStore.disableFlyTo = localStorage.getItem("fly-to-prefference") === "true";
 
   if (route.path !== "/dashboard") {
     locationsStore.refresh();
@@ -15,9 +17,12 @@ function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value;
   localStorage.setItem("isSidebarOpen", isSidebarOpen.value.toString());
 }
+function toggleFlyTo() {
+  mapStore.disableFlyTo = !mapStore.disableFlyTo;
+  localStorage.setItem("fly-to-prefference", `${mapStore.disableFlyTo}`);
+}
 
 const sidebarStore = useSidebarStore();
-const mapStore = useMapStore();
 </script>
 
 <template>
@@ -61,6 +66,17 @@ const mapStore = useMapStore();
           />
         </div>
         <div class="divider"></div>
+
+        <label v-if="route.path === '/dashboard'" class=" mx-4 select-none ">
+
+          <input v-model="mapStore.disableFlyTo" type="checkbox" @click="toggleFlyTo" /> Map jumping is annoying<br />
+          <small>
+
+            <em>{{ mapStore.disableFlyTo ? "ps: I agree with you." : "" }}</em>
+          </small>
+        </label>
+
+        <div class="divider"></div>
         <SidebarButton
           :show-label="isSidebarOpen"
           href="/sign-out"
@@ -70,7 +86,7 @@ const mapStore = useMapStore();
       </div>
     </div>
     <div class="flex-1 overflow-auto pb-4 pr-4">
-      <div class="size-full flex flex-col">
+      <div class="size-full flex" :class="{ 'flex-col': route.path !== '/dashboard/add/' }">
         <NuxtPage />
         <AppMap class="flex-1 mb-2" />
       </div>

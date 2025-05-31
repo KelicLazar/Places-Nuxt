@@ -5,8 +5,11 @@ import type { MapPoint } from "~/lib/types";
 export const useMapStore = defineStore("useMapStore", () => {
   const mapPoints = ref<MapPoint[]>([]);
   const selectedPoint = ref<MapPoint | null>(null);
-  const shouldFlyTo = ref(true)
-; async function init() {
+  const addedPoint = ref<MapPoint | null>(null);
+  const shouldFlyTo = ref(true);
+
+  const disableFlyTo = ref(false);
+  async function init() {
     const { useMap } = await import("@indoorequal/vue-maplibre-gl");
     const { LngLatBounds } = await import("maplibre-gl");
     let bounds: LngLatBounds | null = null;
@@ -26,6 +29,10 @@ export const useMapStore = defineStore("useMapStore", () => {
     });
 
     effect(() => {
+      if (disableFlyTo.value)
+        return;
+      if (addedPoint.value)
+        return;
       if (selectedPoint.value) {
         if (shouldFlyTo.value) {
           map.map?.flyTo({
@@ -42,6 +49,21 @@ export const useMapStore = defineStore("useMapStore", () => {
         });
       }
     });
+
+    watch(addedPoint, (newValue, oldValue) => {
+      if (disableFlyTo.value)
+        return;
+      if (newValue && !oldValue) {
+        map.map?.flyTo({
+          center: [newValue.long, newValue.lat],
+          // speed: 0.8,
+
+          padding: 0,
+        });
+      }
+    }, {
+      immediate: true,
+    });
   }
   function selectPointWithoutFlyTo(point: MapPoint | null) {
     shouldFlyTo.value = false;
@@ -52,6 +74,8 @@ export const useMapStore = defineStore("useMapStore", () => {
     init,
     selectedPoint,
     selectPointWithoutFlyTo,
+    addedPoint,
+    disableFlyTo,
 
   };
 });
