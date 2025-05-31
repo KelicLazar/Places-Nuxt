@@ -17,6 +17,7 @@ function toggleSidebar() {
 }
 
 const sidebarStore = useSidebarStore();
+const mapStore = useMapStore();
 </script>
 
 <template>
@@ -50,6 +51,13 @@ const sidebarStore = useSidebarStore();
             :show-label="isSidebarOpen"
             :icon="item.icon"
             :label="item.label"
+            :icon-color="mapStore.selectedPoint === item.location ? 'text-accent' : undefined"
+            :class="{
+              'border-accent': item.location === mapStore.selectedPoint,
+              'border-transparent': item.location !== mapStore.selectedPoint,
+            }"
+            @mouseenter="mapStore.selectedPoint = item.location || null"
+            @mouseleave="mapStore.selectedPoint = null"
           />
         </div>
         <div class="divider"></div>
