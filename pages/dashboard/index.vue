@@ -2,7 +2,8 @@
 const locationsStore = useLocationStore();
 const mapStore = useMapStore();
 const { locations, status } = storeToRefs(locationsStore);
-
+const scrollContainer = ref<HTMLElement | null>(null);
+useHorizontalWheelScroll(scrollContainer);
 onMounted(() => {
   locationsStore.refresh();
 });
@@ -18,6 +19,7 @@ onMounted(() => {
     </div>
     <div
       v-else-if="locations && locations.length"
+      ref="scrollContainer"
       class="flex flex-nowrap mt-4 gap-2 overflow-auto"
     >
       <div
