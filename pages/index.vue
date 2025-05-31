@@ -13,7 +13,22 @@ const authStore = useAuthStore();
           Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
           quasi. In deleniti eaque aut repudiandae et a id nisi.
         </p>
-        <AuthButton v-if="!authStore.user" />
+        <div v-if="!authStore.user" class="flex flex-col w-full">
+          <AuthButton />
+
+          <br />
+          <button
+
+            :disabled="authStore.loading"
+            class="btn btn-accent"
+            @click="authStore.guestSignIn"
+          >
+            Guest Sign Up
+            <span v-if="authStore.loading" class="loading loading-spinner loading-md"></span>
+            <Icon v-else name="tabler:user-filled" size="24" />
+          </button>
+        </div>
+
         <NuxtLink v-else to="/dashboard" class="btn btn-primary">
           Start Logging
         </NuxtLink>

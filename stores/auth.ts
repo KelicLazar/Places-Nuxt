@@ -25,6 +25,20 @@ export const useAuthStore = defineStore("useAuthStore", () => {
       },
     });
   }
+  async function guestSignIn() {
+    const { csrf } = useCsrf();
+    const headers = new Headers();
+    headers.append("csrf-token", csrf);
+    await authClient.signIn.email({
+      email: "guest@gmail.com",
+      password: "no-password",
+      fetchOptions: {
+        headers,
+      },
+
+    });
+    console.log("clicked guest signin");
+  }
   async function signOut() {
     const { csrf } = useCsrf();
     const headers = new Headers();
@@ -43,6 +57,7 @@ export const useAuthStore = defineStore("useAuthStore", () => {
     signOut,
     user,
     init,
+    guestSignIn,
   };
 });
 
