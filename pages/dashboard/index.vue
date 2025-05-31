@@ -20,7 +20,7 @@ onMounted(() => {
     <div
       v-else-if="locations && locations.length"
       ref="scrollContainer"
-      class="flex flex-nowrap mt-4 gap-2 overflow-auto"
+      class="horizontal-scroll flex flex-nowrap mt-4 gap-2 overflow-auto"
     >
       <div
         v-for="location in locations"

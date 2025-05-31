@@ -34,3 +34,11 @@ html[data-theme="dark"] {
     @apply border-l-gray-800;
   }
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.horizontal-scroll {
+  scrollbar-width: none;
+}
