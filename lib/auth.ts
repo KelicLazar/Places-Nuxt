@@ -11,6 +11,10 @@ export type UserWithId = Omit<User, "id"> & {
   id: number;
 };
 export const auth = betterAuth({
+  emailAndPassword: {
+    enabled: true,
+    autoSignIn: true,
+  },
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path === "/get-session") {
