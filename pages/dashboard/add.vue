@@ -3,8 +3,12 @@ import type { FetchError } from "ofetch";
 
 import { toTypedSchema } from "@vee-validate/zod";
 
+import type { NominatimResult } from "~/lib/types";
+
 import { CENTER_USA } from "~/lib/constants";
 import { InsertLocation } from "~/lib/db/schema";
+
+import getFetchErrorMessage from "../../utils/get-fetch-error-message";
 
 const { $csrfFetch } = useNuxtApp();
 const router = useRouter();
@@ -29,7 +33,17 @@ function formatNumber(value?: number) {
     return 0;
   return value.toFixed(5);
 }
-
+function searchResultSelected(result: NominatimResult) {
+  setFieldValue("name", result.display_name);
+  mapStore.addedPoint = {
+    id: 1,
+    name: "Added Point",
+    description: "",
+    long: +result.lon,
+    lat: +result.lat,
+    centerMap: true,
+  };
+}
 effect(() => {
   if (mapStore.addedPoint) {
     setFieldValue("lat", mapStore.addedPoint.lat);
@@ -76,14 +90,14 @@ const onSubmit = handleSubmit(async (values) => {
     if (error.data?.data) {
       setErrors(error.data?.data);
     }
-    submitError.value = error.data?.statusMessage || error.statusMessage || "An unknown error occurred.";
+    submitError.value = getFetchErrorMessage(error);
   }
   loading.value = false;
 });
 </script>
 
 <template>
-  <div class="container max-w-md mx-auto p-4">
+  <div class="container max-w-md mx-auto p-4 flex flex-col">
     <div class="my-4">
       <h1 class="text-lg">
         Add Location
@@ -110,15 +124,22 @@ const onSubmit = handleSubmit(async (values) => {
         :error="errors.description"
         :disabled="loading"
       />
-      <p>Drag the <Icon name="tabler:map-pin-filled" size="20" class="text-warning" /> marker to your desired location. </p>
-      <p>Or double click on the map.</p>
-      <p
-        class="text-s text-warning
-
-      "
-      >
-        Current Location: {{ formatNumber(controlledValues.lat) }}, {{ formatNumber(controlledValues.long) }}
+      <p class="text-s text-warning">
+        Current Coordinates: {{ formatNumber(controlledValues.lat) }}, {{ formatNumber(controlledValues.long) }}
       </p>
+      <p>To set the coordinates:</p>
+      <ul class="list-disc ml-4 text-sm">
+        <li>
+          <p>Drag the <Icon name="tabler:map-pin-filled" size="20" class="text-warning" /> marker to your desired location. </p>
+        </li>
+        <li>
+          <p>double click on your desired location.</p>
+        </li>
+        <li>
+          <p>Or search for location bellow.</p>
+        </li>
+      </ul>
+
       <div class="flex justify-end gap-2">
         <button
           :disabled="loading"
@@ -135,5 +156,7 @@ const onSubmit = handleSubmit(async (values) => {
         </button>
       </div>
     </form>
+    <div class="divider"></div>
+    <AppPlaceSearch @result-selected="searchResultSelected" />
   </div>
 </template>

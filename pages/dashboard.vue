@@ -88,7 +88,7 @@ const sidebarStore = useSidebarStore();
     <div class="flex-1 overflow-auto pb-4 pr-4">
       <div class="size-full flex" :class="{ 'flex-col': route.path !== '/dashboard/add/' }">
         <NuxtPage />
-        <AppMap class="flex-1 mb-2" />
+        <AppMap />
       </div>
     </div>
   </div>
