@@ -5,12 +5,65 @@ const isSidebarOpen = ref(true);
 const route = useRoute();
 const locationsStore = useLocationStore();
 const mapStore = useMapStore();
+
+const sidebarStore = useSidebarStore();
+
+const { currentLocation } = storeToRefs(locationsStore);
 onMounted(() => {
   isSidebarOpen.value = localStorage.getItem("isSidebarOpen") === "true";
   mapStore.disableFlyTo = localStorage.getItem("fly-to-prefference") === "true";
 
-  if (route.path !== "/dashboard") {
-    locationsStore.refresh();
+  if (route.name !== "dashboard") {
+    locationsStore.refreshLocations();
+  }
+});
+effect(() => {
+  if (route.name === "dashboard") {
+    sidebarStore.sidebarTopItems = [{
+      id: "link-dashboard",
+      label: "Locations",
+      href: "/dashboard",
+      icon: "tabler:map",
+    }, {
+      id: "link-location-add",
+      label: "Add Location",
+      href: "/dashboard/add",
+      icon: "tabler:circle-plus-filled",
+    }];
+  }
+  else if (route.name === "dashboard-location-slug") {
+    sidebarStore.sidebarTopItems = [
+      {
+        id: "link-dashboard",
+        label: "Back to locations",
+        href: "/dashboard",
+        icon: "tabler:arrow-left",
+      },
+      {
+        id: "link-dashboard",
+        label: currentLocation.value ? currentLocation.value.name : "View Logs",
+        to: { name: "dashboard-location-slug", params: {
+          slug: currentLocation.value?.slug,
+        } },
+        icon: "tabler:map",
+      },
+      {
+        id: "link-location-edit",
+        label: "Edit Location",
+        to: { name: "dashboard-location-slug-edit", params: {
+          slug: currentLocation.value?.slug,
+        } },
+        icon: "tabler:map-pin-cog",
+      },
+      {
+        id: "link-location-add",
+        label: "Add Location Log",
+        to: { name: "dashboard-location-slug-add", params: {
+          slug: currentLocation.value?.slug,
+        } },
+        icon: "tabler:circle-plus-filled",
+      },
+    ];
   }
 });
 function toggleSidebar() {
@@ -21,8 +74,6 @@ function toggleFlyTo() {
   mapStore.disableFlyTo = !mapStore.disableFlyTo;
   localStorage.setItem("fly-to-prefference", `${mapStore.disableFlyTo}`);
 }
-
-const sidebarStore = useSidebarStore();
 </script>
 
 <template>
@@ -34,16 +85,13 @@ const sidebarStore = useSidebarStore();
       </div>
       <div class="flex flex-col ">
         <SidebarButton
+          v-for="item in sidebarStore.sidebarTopItems"
+          :key="item.id"
           :show-label="isSidebarOpen"
-          href="/dashboard"
-          icon="tabler:map"
-          label="Locations"
-        />
-        <SidebarButton
-          :show-label="isSidebarOpen"
-          href="/dashboard/add/"
-          icon="tabler:circle-plus-filled"
-          label="Add Location"
+          :href="item.href"
+          :icon="item.icon"
+          :label="item.label"
+          :to="item.to"
         />
 
         <div v-if="sidebarStore.sidebarItems.length || sidebarStore.loading" class="divider"></div>
