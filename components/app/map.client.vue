@@ -61,12 +61,12 @@ onMounted(() => {
           class="tooltip tolltip-top hover:cursor-pointer"
           :data-tip="point.name"
           :class="{
-            'tooltip-open': mapStore.selectedPoint === point,
+            'tooltip-open': isPointSelected(point, mapStore.selectedPoint),
           }"
           @mouseenter="mapStore.selectPointWithoutFlyTo(point)"
           @mouseleave="mapStore.selectPointWithoutFlyTo(null)"
         >
-          <Icon name="tabler:map-pin-filled" size="30" :class="mapStore.selectedPoint === point ? 'text-accent z-10 ' : 'text-secondary'" />
+          <Icon name="tabler:map-pin-filled" size="30" :class=" isPointSelected(point, mapStore.selectedPoint) ? 'text-accent z-10 ' : 'text-secondary'" />
         </div>
       </template>
       <MglPopup>
@@ -76,6 +76,11 @@ onMounted(() => {
         <p v-if="point.description">
           {{ point.description }}
         </p>
+        <div class="flex justify-end mt-1">
+          <NuxtLink v-if="point.to" :to="point.to" class="btn btn-outline btn-sm">
+            {{ point.toLabel }}
+          </NuxtLink>
+        </div>
       </MglPopup>
     </MglMarker>
   </MglMap>

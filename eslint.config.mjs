@@ -56,6 +56,8 @@ export default withNuxt(
           svg: "always",
           math: "always",
         }],
+        "no-unused-vars": "off",
+        "unused-imports/no-unused-vars": "warn",
       },
     },
   ),
