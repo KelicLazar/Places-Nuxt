@@ -61,3 +61,12 @@ export async function insertLocation(insertable: InsertLocationType, slug: strin
   }).returning();
   return created;
 }
+export async function updateLocationBySlug(updates: InsertLocationType, slug: string, userId: number) {
+  const [updated] = await db
+    .update(location)
+    .set(updates)
+    .where(and(eq(location.slug, slug), eq(location.userId, userId)))
+    .returning();
+
+  return updated;
+}
