@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 const locationsStore = useLocationStore();
 const mapStore = useMapStore();
-const { locations, status } = storeToRefs(locationsStore);
+const { locations, locationsStatus: status } = storeToRefs(locationsStore);
 const scrollContainer = ref<HTMLElement | null>(null);
 useHorizontalWheelScroll(scrollContainer);
 onMounted(() => {
-  locationsStore.refresh();
+  locationsStore.refreshLocations();
 });
 </script>
 

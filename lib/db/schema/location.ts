@@ -4,6 +4,8 @@ import { createInsertSchema } from "drizzle-zod";
 // eslint-disable-next-line ts/consistent-type-imports
 import { z } from "zod";
 
+import type { SelectLocationLog } from "./location-log";
+
 import { user } from "./auth";
 import { locationLog } from "./location-log";
 
@@ -43,3 +45,6 @@ export const InsertLocation = createInsertSchema(location, {
 // @ts-expect-error nzm
 export type InsertLocationType = z.infer<typeof InsertLocation>;
 export type SelectLocation = typeof location.$inferSelect;
+export type SelectLocationWithLogs = SelectLocation & {
+  locationLogs: SelectLocationLog[];
+};
