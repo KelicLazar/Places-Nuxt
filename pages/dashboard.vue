@@ -52,16 +52,16 @@ const sidebarStore = useSidebarStore();
           <SidebarButton
             v-for="item in sidebarStore.sidebarItems"
             :key="item.id"
-            :href="item.href"
+            :to="item.to"
             :show-label="isSidebarOpen"
             :icon="item.icon"
             :label="item.label"
-            :icon-color="mapStore.selectedPoint === item.location ? 'text-accent' : undefined"
+            :icon-color="isPointSelected(item.mapPoint, mapStore.selectedPoint) ? 'text-accent' : undefined"
             :class="{
-              'border-accent': item.location === mapStore.selectedPoint,
-              'border-transparent': item.location !== mapStore.selectedPoint,
+              'border-accent': isPointSelected(item.mapPoint, mapStore.selectedPoint),
+              'border-transparent': isPointSelected(item.mapPoint, mapStore.selectedPoint),
             }"
-            @mouseenter="mapStore.selectedPoint = item.location || null"
+            @mouseenter="mapStore.selectedPoint = item.mapPoint || null"
             @mouseleave="mapStore.selectedPoint = null"
           />
         </div>
