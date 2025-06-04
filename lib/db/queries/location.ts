@@ -70,3 +70,13 @@ export async function updateLocationBySlug(updates: InsertLocationType, slug: st
 
   return updated;
 }
+export async function removeLocationBySlug(slug: string, userId: number) {
+  const [deleted] = await db.delete(location)
+    .where(and(
+      eq(location.slug, slug),
+      eq(location.userId, userId),
+    ))
+    .returning();
+
+  return deleted;
+}
