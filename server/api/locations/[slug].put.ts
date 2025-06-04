@@ -4,7 +4,7 @@ import defineAuthenticatedEventHandler from "~/utils/define-authenticated-event-
 import sendZodError from "~/utils/send-zod-error";
 
 export default defineAuthenticatedEventHandler(async (event) => {
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  // await new Promise(resolve => setTimeout(resolve, 2000));
   const slug = getRouterParam(event, "slug") || "";
 
   const result = await readValidatedBody(event, InsertLocation.safeParse);
