@@ -18,7 +18,8 @@ const isDeleting = ref(false);
 
 const loading = computed(() => status.value === "pending" || isDeleting.value);
 const errorMessage = computed(() => error.value?.statusMessage || deleteError.value);
-
+const scrollContainer = ref<HTMLElement | null>(null);
+useHorizontalWheelScroll(scrollContainer);
 onMounted(() => {
   locationStore.refreshCurrentLocation();
 });
@@ -52,7 +53,7 @@ async function confirmDelete() {
 </script>
 
 <template>
-  <div class="p-4 min-h-64">
+  <div class="page-content-top">
     <div v-if="loading">
       <div class="loading"></div>
     </div>
@@ -102,7 +103,28 @@ async function confirmDelete() {
           <Icon name="tabler:map-pin-plus" size="24" />Add location Log
         </NuxtLink>
       </div>
+
+      <div v-if="location?.locationLogs.length" ref="scrollContainer" class="horizontal-scroll">
+        <AppLocationCard
+          v-for="log in location.locationLogs"
+          :key="log.id"
+          :map-point="createMapPointFromLocationLog(log)"
+        >
+          <template #top>
+            <p class="text-sm italic text-grey-500">
+              <span v-if="log.startedAt !== log.endeddAt">
+                {{ formatDate(log.startedAt) }} / {{ formatDate(log.endeddAt) }}
+              </span>
+
+              <span v-else>
+                {{ formatDate(log.startedAt) }}
+              </span>
+            </p>
+          </template>
+        </AppLocationCard>
+      </div>
     </div>
+
     <div v-if="route.name !== 'dashboard-location-slug'">
       <NuxtPage />
     </div>
