@@ -97,7 +97,7 @@ async function confirmDelete() {
         {{
           location.description }}
       </p>
-      <div v-if="!location.locationLogs.length" class="text-sm italic mt-4">
+      <div v-if="!location.locationLogs.length && !loading" class="text-sm italic mt-4">
         <p>Add a location log to get started.</p>
         <NuxtLink :to="{ name: 'dashboard-location-slug-add', params: { slug: route.params.slug } }" class="btn btn-primary mt-2">
           <Icon name="tabler:map-pin-plus" size="24" />Add location Log
