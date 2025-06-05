@@ -1,17 +1,17 @@
-import type { LngLatBounds } from "maplibre-gl";
+import { LngLatBounds } from "maplibre-gl";
 
 import type { MapPoint } from "~/lib/types";
 
 export const useMapStore = defineStore("useMapStore", () => {
   const mapPoints = ref<MapPoint[]>([]);
   const selectedPoint = ref<MapPoint | null>(null);
-  const addedPoint = ref<MapPoint & { centerMap?: boolean } | null>(null);
+  const addedPoint = ref<MapPoint & { centerMap?: boolean; zoom?: number } | null>(null);
   const shouldFlyTo = ref(true);
 
   const disableFlyTo = ref(false);
   async function init() {
     const { useMap } = await import("@indoorequal/vue-maplibre-gl");
-    const { LngLatBounds } = await import("maplibre-gl");
+    // const { LngLatBounds } = await import("maplibre-gl");
     let bounds: LngLatBounds | null = null;
     const map = useMap();
     effect(() => {
@@ -57,7 +57,7 @@ export const useMapStore = defineStore("useMapStore", () => {
       if ((newValue && !oldValue) || newValue?.centerMap) {
         map.map?.flyTo({
           center: [newValue.long, newValue.lat],
-          // speed: 0.8,
+          zoom: newValue.zoom || 6,
 
           padding: 0,
         });
