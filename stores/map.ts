@@ -1,6 +1,10 @@
+import type { LngLatLike } from "maplibre-gl";
+
 import { LngLatBounds } from "maplibre-gl";
 
 import type { MapPoint } from "~/lib/types";
+
+import { CENTER_USA } from "~/lib/constants";
 
 export const useMapStore = defineStore("useMapStore", () => {
   const mapPoints = ref<MapPoint[]>([]);
@@ -16,8 +20,13 @@ export const useMapStore = defineStore("useMapStore", () => {
     const map = useMap();
     effect(() => {
       const firstPoint = mapPoints.value[0];
-      if (!firstPoint)
+      if (!firstPoint) {
+        map.map?.flyTo({
+          center: CENTER_USA as LngLatLike,
+          zoom: 2,
+        });
         return;
+      }
       bounds = mapPoints.value.reduce((bounds, point) => {
         return bounds.extend([point.long, point.lat]);
       }, new LngLatBounds([firstPoint.long, firstPoint.lat], [firstPoint.long, firstPoint.lat],
