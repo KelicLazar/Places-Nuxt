@@ -24,7 +24,7 @@
     "@vee-validate/nuxt": "^4.15.0",
     "@vee-validate/zod": "^4.15.0",
     "better-auth": "^1.2.8",
-    "drizzle-orm": "^0.43.1",
+    "drizzle-orm": "^0.44.2",
     "drizzle-typebox": "^0.3.3",
     "drizzle-zod": "^0.8.2",
     "maplibre-gl": "^5.5.0",
