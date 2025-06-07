@@ -5,7 +5,7 @@ import type { LngLat } from "maplibre-gl";
 import { CENTER_USA as RAW_CENTER_USA } from "~/lib/constants";
 
 const CENTER_USA: [number, number] = [RAW_CENTER_USA[0], RAW_CENTER_USA[1]];
-const zoom = 2;
+const zoom = 1;
 const colorMode = useColorMode();
 const mapStore = useMapStore();
 
@@ -36,6 +36,7 @@ onMounted(() => {
     :map-style="style"
     :center="CENTER_USA"
     :zoom="zoom"
+
     @map:dblclick="onDoubleClick"
   >
     <MglNavigationControl />

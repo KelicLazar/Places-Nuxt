@@ -18,6 +18,18 @@ export const useMapStore = defineStore("useMapStore", () => {
     // const { LngLatBounds } = await import("maplibre-gl");
     let bounds: LngLatBounds | null = null;
     const map = useMap();
+    map?.map?.on("load", () => {
+      map?.map?.setProjection({
+        type: "globe",
+      });
+    });
+
+    map?.map?.on("projectiontransition", () => {
+      map?.map?.setProjection({
+        type: "globe",
+      });
+    });
+
     effect(() => {
       const firstPoint = mapPoints.value[0];
       if (!firstPoint) {
@@ -32,10 +44,10 @@ export const useMapStore = defineStore("useMapStore", () => {
       }, new LngLatBounds([firstPoint.long, firstPoint.lat], [firstPoint.long, firstPoint.lat],
       ));
 
-      map.map?.fitBounds(bounds, {
-        padding: 50,
-        maxZoom: 5,
-      });
+      // map.map?.fitBounds(bounds, {
+      //   padding: 50,
+      // maxZoom: 5,
+      // });
     });
 
     effect(() => {
