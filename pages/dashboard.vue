@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Icon } from "#components";
 
-import { CURRENT_LOCATION_PAGES, EDIT_PAGES, LOCATION_PAGES } from "~/lib/constants";
+import { CURRENT_LOCATION_PAGES, CURRENT_LOG_LOCATION_PAGES, EDIT_PAGES, LOCATION_PAGES } from "~/lib/constants";
 
 const isSidebarOpen = ref(true);
 const route = useRoute();
@@ -18,6 +18,10 @@ if (LOCATION_PAGES.has(route.name?.toString() || "")) {
 
 if (CURRENT_LOCATION_PAGES.has(route.name?.toString() || "")) {
   await locationsStore.refreshCurrentLocation();
+}
+
+if (CURRENT_LOG_LOCATION_PAGES.has(route.name?.toString() || "")) {
+  await locationsStore.refreshCurrentLocationLog();
 }
 
 onMounted(() => {
@@ -76,6 +80,23 @@ effect(() => {
         },
       )
       ;
+    }
+  }
+  else if (CURRENT_LOG_LOCATION_PAGES.has(route.name?.toString() || "")) {
+    if (currentLocation.value && currentLocationStatus.value !== "pending") {
+      sidebarStore.sidebarTopItems = [
+        {
+          id: "link-location",
+          label: `Back to ${currentLocation?.value?.name}`,
+          to: {
+            name: "dashboard-location-slug",
+            params: {
+              slug: route.params.slug,
+            },
+          },
+          icon: "tabler:arrow-left",
+        },
+      ];
     }
   }
 });

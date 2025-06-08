@@ -44,10 +44,10 @@ export const useMapStore = defineStore("useMapStore", () => {
       }, new LngLatBounds([firstPoint.long, firstPoint.lat], [firstPoint.long, firstPoint.lat],
       ));
 
-      // map.map?.fitBounds(bounds, {
-      //   padding: 50,
-      // maxZoom: 5,
-      // });
+      map.map?.fitBounds(bounds, {
+        padding: 50,
+        maxZoom: 5,
+      });
     });
 
     effect(() => {
@@ -67,7 +67,7 @@ export const useMapStore = defineStore("useMapStore", () => {
       }
       else if (bounds) {
         map.map?.fitBounds(bounds, {
-          padding: 50,
+          // padding: 50,
         });
       }
     });
