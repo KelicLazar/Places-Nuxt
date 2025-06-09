@@ -1,13 +1,20 @@
 import { z } from "zod";
 
 import { findLocation } from "~/lib/db/queries/location";
-import { findLocationLog } from "~/lib/db/queries/location-log";
+import { updateLocationLog } from "~/lib/db/queries/location-log";
+import { InsertLocationLog } from "~/lib/db/schema";
 import defineAuthenticatedEventHandler from "~/utils/define-authenticated-event-handler";
+import sendZodError from "~/utils/send-zod-error";
 
 export default defineAuthenticatedEventHandler(async (event) => {
-  // await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
   const slug = getRouterParam(event, "slug") || "";
+
+  const result = await readValidatedBody(event, InsertLocationLog.safeParse);
+  if (!result.success) {
+    return sendZodError(event, result.error as any);
+  }
 
   const location = await findLocation(slug, event.context.user.id);
 
@@ -26,7 +33,7 @@ export default defineAuthenticatedEventHandler(async (event) => {
     }));
   }
 
-  const locationLog = await findLocationLog(+id, event.context.user.id);
+  const locationLog = await updateLocationLog(+id, result.data, event.context.user.id);
 
   if (!locationLog) {
     return sendError(event, createError({
