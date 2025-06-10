@@ -1,7 +1,7 @@
 export default function formatDate(value: number | string, forInput = false) {
   const date = new Date(value);
   const year = date.getFullYear();
-  const month = (date.getMonth());
+  const month = (date.getMonth() + 1);
   const day = date.getDate().toString().padStart(2, "0");
   const monthMap = [
     "January",
@@ -17,7 +17,7 @@ export default function formatDate(value: number | string, forInput = false) {
     "November",
     "December",
   ];
-  let formatted = `${day} ${monthMap[month]} ${year}`;
+  let formatted = `${day} ${monthMap[month - 1]} ${year}`;
   if (forInput) {
     formatted = `${year}-${month.toString().padStart(2, "0")}-${day}`;
   }
