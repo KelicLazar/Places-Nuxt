@@ -103,6 +103,12 @@ onBeforeRouteUpdate((to) => {
       <p class="text-sm">
         {{ locationLog.description }}
       </p>
+      <div v-if="!locationLog?.images.length && !loading" class="text-sm italic mt-4">
+        <NuxtLink :to="{ name: 'dashboard-location-slug-id-images', params: { slug: route.params.slug, id: route.params.id } }" class="btn btn-primary mt-2">
+          Add Image  <Icon name="tabler:photo-cog" size="24" />
+        </NuxtLink>
+      </div>
+      <AppImageList :images="locationLog.images" />
     </div>
     <div v-else>
       <NuxtPage />

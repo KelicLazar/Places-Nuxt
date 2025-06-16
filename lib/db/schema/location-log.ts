@@ -3,8 +3,11 @@ import { int, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+import type { SelectLocationLogImage } from "./location-log-image";
+
 import { user } from "./auth";
 import { location } from "./location";
+import { locationLogImage } from "./location-log-image";
 
 export const locationLog = sqliteTable("locationLog", {
   id: int().primaryKey({ autoIncrement: true }),
@@ -20,12 +23,13 @@ export const locationLog = sqliteTable("locationLog", {
   createdAt: int().notNull().$default(() => Date.now()),
   updatedAt: int().notNull().$default(() => Date.now()).$onUpdate(() => Date.now()),
 });
-export const locationLOgRelations = relations(locationLog, ({ one }) => {
+export const locationLOgRelations = relations(locationLog, ({ one, many }) => {
   return {
     location: one(location, {
       fields: [locationLog.locationId],
       references: [location.id],
     }),
+    images: many(locationLogImage),
   };
 });
 
@@ -57,3 +61,6 @@ export const InsertLocationLog = createInsertSchema(locationLog, {
 // @ts-expect-error nzm
 export type InsertLocationLogType = z.infer<typeof InsertLocationLog>;
 export type SelectLocationLog = typeof locationLog.$inferSelect;
+export type SelectLocationLogWithImages = SelectLocationLog & {
+  images: SelectLocationLogImage[];
+};
