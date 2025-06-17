@@ -36,6 +36,11 @@ const onHide = () => (visibleRef.value = false);
       :index="indexRef"
       :move-disabled="true"
       @hide="onHide"
-    />
+      @on-index-change="(oldIndex:number, newIndex:number) => { indexRef = newIndex }"
+    >
+      <template #toolbar>
+        <span class="absolute bottom-10 left-1/2 -translate-x-1/2">{{ indexRef + 1 }}/ {{ images.length }}</span>
+      </template>
+    </VueEasyLightbox>
   </div>
 </template>
