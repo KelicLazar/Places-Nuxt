@@ -8,6 +8,13 @@ import { locationLog } from "../schema";
 export async function findLocationLog(id: number, userId: number) {
   const foundLog = await db.query.locationLog.findFirst({
     where: and(eq(locationLog.id, id), eq(locationLog.userId, userId)),
+    with: {
+      images: {
+        orderBy(fields, operators) {
+          return operators.desc(fields.createdAt);
+        },
+      },
+    },
   });
   return foundLog;
 }
