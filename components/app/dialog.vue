@@ -34,6 +34,8 @@ onUnmounted(() => {
       <p class="py-4">
         {{ description }}
       </p>
+      <slot>
+      </slot>
       <div class="flex justify-end gap-2">
         <button class="btn btn-outline" @click="onClose">
           Cancel
