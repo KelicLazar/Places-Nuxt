@@ -6,15 +6,41 @@ defineProps<{
 }>();
 
 const config = useRuntimeConfig();
+
+const visibleRef = ref(false);
+const indexRef = ref(0);
+
+function showImg(imgId: number) {
+  indexRef.value = imgId;
+  visibleRef.value = true;
+}
+
+const onHide = () => (visibleRef.value = false);
 </script>
 
 <template>
   <div class="flex mt-2 gap-2">
-    <div v-for="image in images" :key="image.id" class="card compact-card h-40 w-64 shring-0 flex bg-base-300 items-center justify-center">
+    <div
+      v-for="(image, index) in images"
+      :key="image.id"
+      class="card compact-card h-40 w-64 shring-0 flex bg-base-300 items-center justify-center"
+    >
       <div class="card-body size-full flex p-2.5 ">
-        <img class="size-full h-24 flex-1 shrink  object-cover" :src="`${config.public.s3BucketUrl}/${image.key}`" />
+        <img class="size-full cursor-pointer h-24 flex-1 shrink  object-cover" :src="`${config.public.s3BucketUrl}/${image.key}`" @click="() => showImg(index)" />
         <slot :image></slot>
       </div>
     </div>
+    <VueEasyLightbox
+      :visible="visibleRef"
+      :imgs="images.map(img => `${config.public.s3BucketUrl}/${img.key}`)"
+      :index="indexRef"
+      :move-disabled="true"
+      @hide="onHide"
+      @on-index-change="(oldIndex:number, newIndex:number) => { indexRef = newIndex }"
+    >
+      <template #toolbar>
+        <span class="absolute bottom-10 left-1/2 -translate-x-1/2">{{ indexRef + 1 }}/ {{ images.length }}</span>
+      </template>
+    </VueEasyLightbox>
   </div>
 </template>
