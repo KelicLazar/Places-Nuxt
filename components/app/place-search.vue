@@ -45,6 +45,17 @@ function setLocation(result: NominatimResult) {
 
 <template>
   <div class="flex flex-col gap-2 flex-1">
+    <div class="text-sm italic flex mb-2 gap-1 justify-end">
+      <span> Search results provided by</span>
+      <a
+        class="link"
+        target="_blank"
+        rel="noopenner nofollow"
+        href="https://nominatim.openstreetmap.org/ui/search.html"
+      > nominatim
+
+      </a>
+    </div>
     <Form
       ref="form"
       v-slot="{ errors }"

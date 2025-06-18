@@ -22,20 +22,20 @@ export default defineAuthenticatedEventHandler(
       });
 
       if (!response.ok) {
-        return sendError(event, createError({
+        throw createError({
           statusCode: 504,
           statusMessage: "Unabable to reach search API.",
-        }));
+        });
       }
 
       const results = await response.json() as NominatimResult[];
       return results;
     }
     catch {
-      return sendError(event, createError({
+      throw createError({
         statusCode: 504,
         statusMessage: "Unabable to reach search API2.",
-      }));
+      });
     }
   }, { maxAge: 60 * 60 * 24, name: "search-nominatim", getKey: async (event) => {
     const query = await getQuery(event);
